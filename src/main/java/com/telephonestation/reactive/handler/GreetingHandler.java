@@ -1,7 +1,6 @@
 package com.telephonestation.reactive.handler;
 
-import com.telephonestation.reactive.entity.Client;
-import com.telephonestation.reactive.entity.Greeting;
+import com.telephonestation.reactive.entity.User;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -17,32 +16,26 @@ public class GreetingHandler {
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(new Greeting("Hello, Spring")));
+                .body(BodyInserters.fromValue("Hello World!"));
     }
 
-    public Mono<ServerResponse> home(ServerRequest request) {
+    public Mono<ServerResponse> users(ServerRequest request) {
         return ServerResponse
                 .ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(BodyInserters.fromValue("Main page!"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue("User Page"));
     }
 
-    public Mono<ServerResponse> getClients(ServerRequest request) {
-        String start = request
-                .queryParam("start")
-                .orElse("0");
-
-        Flux<Client> clients = Flux.just(
-                        new Client(1L, "Vasya", "Pypkin", 18),
-                        new Client(2L, "Iva", "Pypkina", 19),
-                        new Client(3L, "Inna", "Pypkina", 20)
-                )
-                .skip(Long.valueOf(start))
-                .take(2);
+    public Mono<ServerResponse> admin(ServerRequest request) {
+        Flux<User> users = Flux.just(
+                new User(1L, "Vasya", "1234"),
+                new User(2L, "Inna", "1234"),
+                new User(3L, "Ira", "1234")
+        );
 
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(clients, Client.class);
+                .body(users, User.class);
     }
 }
